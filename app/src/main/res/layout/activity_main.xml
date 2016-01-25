@@ -52,5 +52,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="0 m/s" />
+        android:text="0 m/s"
+        android:editable="false"
+        android:inputType="none" />
 </RelativeLayout>

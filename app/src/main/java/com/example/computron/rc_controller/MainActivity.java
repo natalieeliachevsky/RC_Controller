@@ -5,17 +5,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View.OnTouchListener;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 
 public class MainActivity extends AppCompatActivity {
 
     boolean isManual = true;
     RelativeLayout layout_joystick;
     JoyStickClass js;
-    Compass compass;
     protected Button manualButton;
+
+    private ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         js.setStickSize(150, 150);
         js.setLayoutSize(500, 500);
         js.setLayoutAlpha(150);
-        js.setStickAlpha(100);
+        js.setStickAlpha(90);
         js.setOffset(90);
         js.setMinimumDistance(50);
 
@@ -98,8 +101,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        image = (ImageView) findViewById(R.id.imageViewCompass);
+
+        // TextView that will tell the user what degree is he heading
+        //tvHeading = (TextView) findViewById(R.id.tvHeading);
+
+        moveCompassTo(180);
     }
 
 
+    private void moveCompassTo(float degree) {
+
+        float currentDegree = 0f;
+        //tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
+
+        // create a rotation animation (reverse turn degree degrees)
+        RotateAnimation ra = new RotateAnimation(
+                currentDegree,
+                -degree,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        // how long the animation will take place
+        ra.setDuration(210);
+
+        // set the animation after the end of the reservation status
+        ra.setFillAfter(true);
+
+        // Start the animation
+        image.startAnimation(ra);
+        currentDegree = -degree;
+
+    }
 
 }
