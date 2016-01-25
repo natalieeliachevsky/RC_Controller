@@ -253,21 +253,21 @@ public class JoyStickClass {
 		} catch (Exception e) { }
 		mLayout.addView(draw);
 	}
-	 
-	private class DrawCanvas extends View{
-	 	float x, y;
-	 	
-	 	private DrawCanvas(Context mContext) {
-	         super(mContext);
-	     }
-	     
-	     public void onDraw(Canvas canvas) {
-	         canvas.drawBitmap(stick, x, y, paint);
-	     }
-	     
-	     private void position(float pos_x, float pos_y) {
-	     	x = pos_x - (stick_width / 2);
-	     	y = pos_y - (stick_height / 2);
-	     }
-	 }
+
+	private class DrawCanvas extends View {
+		float x, y;
+
+		private DrawCanvas(Context mContext) {
+			super(mContext);
+		}
+
+		public void onDraw(Canvas canvas) {
+			canvas.drawBitmap(stick, x, y, paint);
+		}
+
+		private void position(float pos_x, float pos_y) {
+			x = pos_x - (stick_width / 2);
+			y = pos_y - (stick_height / 2);
+		}
+	}
 }

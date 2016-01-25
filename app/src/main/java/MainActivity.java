@@ -11,8 +11,10 @@ import android.widget.RelativeLayout;
 
 public class MainActivity extends AppCompatActivity {
 
+    boolean isManual = true;
     RelativeLayout layout_joystick;
     JoyStickClass js;
+    Compass compass;
     protected Button manualButton;
 
     @Override
@@ -20,14 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        manualButton = (Button) findViewById(R.id.manual_button);
-
-        manualButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //manualButton.setVisibility(View.GONE);
-                manualButton.setText(R.string.autonomous_text);
-            }
-        });
+        manualButton = (Button)findViewById(R.id.manual_button);
 
         layout_joystick = (RelativeLayout)findViewById(R.id.layout_joystick);
 
@@ -39,6 +34,27 @@ public class MainActivity extends AppCompatActivity {
         js.setStickAlpha(100);
         js.setOffset(90);
         js.setMinimumDistance(50);
+
+
+        manualButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (isManual) {
+                    // set Autonomous Mode
+
+                    manualButton.setText(R.string.autonomous_text);
+                    layout_joystick.setVisibility(View.INVISIBLE);
+
+                    isManual = false;
+                } else {
+                    // set Manual Mode
+
+                    manualButton.setText(R.string.manual_text);
+                    layout_joystick.setVisibility(View.VISIBLE);
+
+                    isManual = true;
+                }
+            }
+        });
 
 
         layout_joystick.setOnTouchListener(new OnTouchListener() {
