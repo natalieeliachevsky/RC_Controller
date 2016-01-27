@@ -1,5 +1,6 @@
 package com.example.computron.rc_controller;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -10,6 +11,17 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import static com.example.computron.rc_controller.R.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,14 +35,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(layout.activity_main);
 
-        manualButton = (Button)findViewById(R.id.manual_button);
+        manualButton = (Button)findViewById(id.manual_button);
 
-        layout_joystick = (RelativeLayout)findViewById(R.id.layout_joystick);
+        layout_joystick = (RelativeLayout)findViewById(id.layout_joystick);
 
         js = new JoyStickClass(getApplicationContext()
-                , layout_joystick, R.drawable.image_button);
+                , layout_joystick, drawable.image_button);
         js.setStickSize(150, 150);
         js.setLayoutSize(500, 500);
         js.setLayoutAlpha(150);
@@ -44,14 +56,14 @@ public class MainActivity extends AppCompatActivity {
                 if (isManual) {
                     // set Autonomous Mode
 
-                    manualButton.setText(R.string.autonomous_text);
+                    manualButton.setText(string.autonomous_text);
                     layout_joystick.setVisibility(View.INVISIBLE);
 
                     isManual = false;
                 } else {
                     // set Manual Mode
 
-                    manualButton.setText(R.string.manual_text);
+                    manualButton.setText(string.manual_text);
                     layout_joystick.setVisibility(View.VISIBLE);
 
                     isManual = true;
@@ -101,14 +113,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        image = (ImageView) findViewById(R.id.imageViewCompass);
+        image = (ImageView) findViewById(id.imageViewCompass);
 
         // TextView that will tell the user what degree is he heading
         //tvHeading = (TextView) findViewById(R.id.tvHeading);
 
         moveCompassTo(180);
-    }
 
+
+
+        // set up wifi connection
+        new RetrieveFeedTask((TextView) findViewById(id.internetTextView)).execute();
+
+    }
 
     private void moveCompassTo(float degree) {
 
@@ -133,6 +150,53 @@ public class MainActivity extends AppCompatActivity {
         image.startAnimation(ra);
         currentDegree = -degree;
 
+    }
+
+}
+
+class RetrieveFeedTask extends AsyncTask {
+
+    TextView internetView;
+    private Exception exception;
+    MainActivity mActivity;
+
+    public RetrieveFeedTask(TextView tv)
+    {
+        internetView = tv;
+    }
+
+    @Override
+    protected Object doInBackground(Object[] params) {
+
+        String st;
+        try {
+            InetAddress testIPAddress = InetAddress.getByName("192.168.2.5");
+            Socket s = new Socket(testIPAddress,80);
+
+            //outgoing stream redirect to socket
+            InputStream out = s.getInputStream();
+
+            BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
+
+            //read line(s)
+           // st = input.readLine();
+
+            //Close connection
+            s.close();
+
+           // internetView = (TextView) mActivity.findViewById(R.id.internetTextView);
+            internetView.setText("Connected!!!!!");
+
+        } catch (UnknownHostException e) {
+            // TODO Auto-generated catch block
+            internetView.setText("1");
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            internetView.setText("2");
+            e.printStackTrace();
+        }
+        return params;
     }
 
 }
