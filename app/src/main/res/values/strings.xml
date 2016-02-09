@@ -3,4 +3,10 @@
     <string name="action_settings">Settings</string>
     <string name="manual_text">Manual</string>
     <string name="autonomous_text">Autonomous</string>
+    <string name="compass_info_string">Compass</string>
+    <string name="disconnect_string">Disconnect</string>
+    <string name="connect_string">Connect</string>
+    <string name="cannot_connect_string">Cannot connect to car</string>
+    <string name="continue_string">Press \'Connect\' to continue</string>
+    <string name="default_velocity">0 m/s</string>
 </resources>

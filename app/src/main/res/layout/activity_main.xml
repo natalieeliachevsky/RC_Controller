@@ -12,59 +12,49 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/manual_text"
+        android:text="@string/autonomous_text"
         android:id="@+id/manual_button"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <RelativeLayout
         android:id="@+id/layout_joystick"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:background="@drawable/image_button_bg"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignRight="@+id/layout_joystick"
-        android:id="@+id/relativeLayout">
-
-        <ImageView
-            android:id="@+id/imageViewCompass"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/img_compass"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
+        android:layout_above="@+id/manual_button"
+        android:layout_centerHorizontal="true">
     </RelativeLayout>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="0 m/s"
+        android:text="@string/default_velocity"
         android:editable="false"
-        android:inputType="none" />
+        android:inputType="none"
+        android:layout_below="@+id/imageViewCompass"
+        android:layout_toRightOf="@+id/layout_joystick"
+        android:layout_toEndOf="@+id/layout_joystick" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Disconnected..."
-        android:id="@+id/internetTextView"
-        android:layout_marginTop="55dp"
-        android:layout_below="@+id/relativeLayout"
-        android:layout_alignRight="@+id/editText"
-        android:layout_alignEnd="@+id/editText"
-        android:inputType="none" />
+        android:text="@string/disconnect_string"
+        android:id="@+id/disconnect_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:id="@+id/imageViewCompass"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/img_compass"
+        android:contentDescription="@string/compass_info_string"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>
