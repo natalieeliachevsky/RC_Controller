@@ -1,6 +1,8 @@
 package com.example.computron.rc_controller;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -8,13 +10,27 @@ import android.view.View.OnTouchListener;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.VideoView;
 import android.widget.RelativeLayout;
+import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.Toast;
 
-import java.util.concurrent.ExecutionException;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
-import static com.example.computron.rc_controller.R.*;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.URL;
+import java.io.InputStream;
+import java.net.UnknownHostException;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,35 +39,40 @@ public class MainActivity extends AppCompatActivity {
     JoyStickClass js;
     protected Button manualButton;
     protected Button disconnectButton;
-    Wifi wifiController;
+
+
+    private MjpegView mv;
 
     private ImageView image;
+    WebView test;
+
+    MediaController mediaController;
+
+    VideoView cameraDisplay;
 
     private Wifi thisWifiConnection;
-
-    public MainActivity(Wifi wifiObject) {
-        thisWifiConnection = wifiObject;
-
-    }
+    MediaController mc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //connect wifi
-        if (!connectWifi()){
+        thisWifiConnection = new Wifi();
+
+        if (!thisWifiConnection.Connect()){
             switchToLoadScreen(findViewById(android.R.id.content));
         }
 
-        setContentView(layout.activity_main);
+        setContentView(R.layout.activity_main);
 
-        manualButton = (Button) findViewById(id.manual_button);
-        disconnectButton = (Button) findViewById(id.disconnect_button);
-        layout_joystick = (RelativeLayout) findViewById(id.layout_joystick);
-        image = (ImageView) findViewById(id.imageViewCompass);
+        manualButton = (Button) findViewById(R.id.manual_button);
+        disconnectButton = (Button) findViewById(R.id.disconnect_button);
+        layout_joystick = (RelativeLayout) findViewById(R.id.layout_joystick);
+        image = (ImageView) findViewById(R.id.imageViewCompass);
 
         js = new JoyStickClass(getApplicationContext()
-                , layout_joystick, drawable.image_button);
+                , layout_joystick, R.drawable.image_button);
 
         js.setStickSize(150, 150);
         js.setLayoutSize(500, 500);
@@ -82,8 +103,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        mv = (MjpegView) findViewById(R.id.mv);
+
+        String hostname = "192.168.2.8";
+        String portnum = "5000";
+        new DoRead().execute( hostname, portnum);
+        // my room
+      //  playStream("192.168.2.8:5000");
+
     }
 
+
+    @Override
+    protected void onDestroy() {
+        cameraDisplay.stopPlayback();
+        super.onDestroy();
+    }
+
+    private void playStream(String src){
+        Uri UriSrc = Uri.parse(src);
+        if(UriSrc == null){
+            Toast.makeText(MainActivity.this,
+                    "UriSrc == null", Toast.LENGTH_LONG).show();
+        }else{
+            cameraDisplay.setVideoURI(UriSrc);
+            mediaController = new MediaController(this);
+            cameraDisplay.setMediaController(mediaController);
+            Toast.makeText(MainActivity.this,
+                    "Connect: " + src,
+                    Toast.LENGTH_LONG).show();
+            cameraDisplay.start();
+        }
+    }
 
 
 
@@ -117,14 +169,14 @@ public class MainActivity extends AppCompatActivity {
         if (isManual) {
             // set Autonomous Mode
 
-            manualButton.setText(string.manual_text);
+            manualButton.setText(R.string.manual_text);
             layout_joystick.setVisibility(View.INVISIBLE);
 
             isManual = false;
         } else {
             // set Manual Mode
 
-            manualButton.setText(string.autonomous_text);
+            manualButton.setText(R.string.autonomous_text);
             layout_joystick.setVisibility(View.VISIBLE);
 
             isManual = true;
@@ -191,26 +243,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public class DoRead extends AsyncTask<String, Void, MjpegInputStream> {
+    	protected MjpegInputStream doInBackground( String... params){
+    		Socket socket = null;
+    		try {
+				socket = new Socket( params[0], Integer.valueOf( params[1]));
+	    		return (new MjpegInputStream(socket.getInputStream()));
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		return null;
+    	}
 
-    private boolean connectWifi() {
-
-        // set up wifi connection
-        wifiController = new Wifi();
-
-        try {
-            wifiController.execute().get();
-        } catch (InterruptedException e) {
-
-        } catch (ExecutionException e) {
-
+        protected void onPostExecute(MjpegInputStream result) {
+            try {
+                mv.setSource(result);
+            }
+            catch (Exception e){
+                e.getMessage();
+            }
+            if(result!=null) result.setSkip(1);
+            mv.setDisplayMode(MjpegView.SIZE_BEST_FIT);
+            mv.showFps(true);
         }
-
-        if (wifiController.Connected()) {
-            return true;
-        } else {
-            return false;
-        }
-
     }
 
+
 }
+
+

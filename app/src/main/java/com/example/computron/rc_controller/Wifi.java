@@ -8,6 +8,7 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Natalie on 1/28/2016.
@@ -24,7 +25,7 @@ public class Wifi extends AsyncTask {
     public Wifi()
     {
         try {
-            piIPAddress = InetAddress.getByName("172.23.175.186");//192.168.2.5");
+            piIPAddress = InetAddress.getByName("192.168.2.8");
         }
         catch (UnknownHostException e) {
             piIPAddress = null;
@@ -37,7 +38,7 @@ public class Wifi extends AsyncTask {
 
        // String st;
         try {
-            s = new Socket(piIPAddress,8000);//80);
+            s = new Socket(piIPAddress,5010);//80);
 
             //outgoing stream redirect to socket
             // InputStream out = s.getInputStream();
@@ -60,7 +61,7 @@ public class Wifi extends AsyncTask {
         return params;
     }
 
-    public boolean Connected(){
+    public boolean IsConnected(){
         return isConnected;
     }
 
@@ -73,6 +74,25 @@ public class Wifi extends AsyncTask {
             catch (IOException e) { return false; }
         }
         return true;
+    }
+
+    public boolean Connect() {
+
+        // set up wifi connection
+        try {
+            execute().get();
+        } catch (InterruptedException e) {
+
+        } catch (ExecutionException e) {
+
+        }
+
+        if (isConnected) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 }
