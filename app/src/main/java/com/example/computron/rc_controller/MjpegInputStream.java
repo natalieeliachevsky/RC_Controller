@@ -46,7 +46,7 @@ public class MjpegInputStream extends DataInputStream {
 
     static {
         try {
-            System.loadLibrary("jpeg");//"ImageProc");
+            System.loadLibrary("ImagProc");
         }
         catch (Exception e){
             e.getMessage();
@@ -54,6 +54,7 @@ public class MjpegInputStream extends DataInputStream {
     }
     public native void pixeltobmp(byte[] jp, int l, Bitmap bmp);
     public native void freeCameraMemory();
+    public native void imagProc();
 
     public static MjpegInputStream read(String surl) {
         try {
@@ -89,6 +90,7 @@ public class MjpegInputStream extends DataInputStream {
 
         return -1;
     }
+
 
     private int getStartOfSequence(DataInputStream in, byte[] sequence)
             throws IOException

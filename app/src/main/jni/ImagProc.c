@@ -1,4 +1,9 @@
-#include "ImageProc.h"
+#include "com_example_computron_rc_controller_MjpegInputStream.h"
+#include "jpegint.h"
+#include "jconfig.h"
+#include "jerror.h"
+#include "jmorecfg.h"
+#include "jpeglib.h"
 
 METHODDEF(void)
 my_error_exit (j_common_ptr cinfo)
@@ -250,8 +255,8 @@ void processimage (const void *p, int l)
 	
 }
 
-//void Java_com_example_computron_rc_controller_MjpegInputStream_pixeltobmp( JNIEnv* env,jobject thiz,
-void Java_com_camera_simplemjpeg_MjpegInputStream_pixeltobmp( JNIEnv* env,jobject thiz,
+//void JNICALL Java_com_example_computron_rc_controller_MjpegInputStream_pixeltobmp( JNIEnv* env,jobject thiz,
+JNIEXPORT void Java_com_example_computron_rc_controller_MjpegInputStream_pixeltobmp( JNIEnv* env,jobject thiz,
 	 jbyteArray jp, jint l, jobject bmp){
 
 
@@ -302,9 +307,26 @@ void Java_com_camera_simplemjpeg_MjpegInputStream_pixeltobmp( JNIEnv* env,jobjec
 		(*env)->ReleaseByteArrayElements(env, jp, p, 0);
 }
 
-//void Java_com_example_computron_rc_controller_MjpegInputStream_freeCameraMemory( JNIEnv* env,jobject thiz){
-void Java_com_camera_simplemjpeg_MjpegInputStream_freeCameraMemory( JNIEnv* env,jobject thiz){
+//void JNICALL Java_com_example_computron_rc_controller_MjpegInputStream_freeCameraMemory( JNIEnv* env,jobject thiz){
+JNIEXPORT void Java_com_example_computron_rc_controller_MjpegInputStream_freeCameraMemory( JNIEnv* env,jobject thiz){
 	if(rgb) free(rgb);
 	rgb = NULL;
 
 }
+
+
+
+/*
+ * Class:     com_example_computron_rc_controller_MjpegInputStream
+ * Method:    pixeltobmp
+ * Signature: ([BILandroid/graphics/Bitmap;)V
+ */
+
+//JNIEXPORT void JNICALL Java_com_example_computron_rc_1controller_MjpegInputStream_pixeltobmp
+ // (JNIEnv *, jobject, jbyteArray, jint, jobject);
+
+/*
+ * Class:     com_example_computron_rc_controller_MjpegInputStream
+ * Method:    freeCameraMemory
+ * Signature: ()V
+ */

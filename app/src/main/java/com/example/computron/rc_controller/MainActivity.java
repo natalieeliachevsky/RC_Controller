@@ -18,21 +18,17 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.Toast;
 
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.Socket;
-import java.net.URL;
-import java.io.InputStream;
 import java.net.UnknownHostException;
 
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-
 public class MainActivity extends AppCompatActivity {
+
+    final String IP_ADDRESS = "192.168.2.6"; // my room
+   // final String IP_ADDRESS = "192.168.0.106"; // Andrew's Router
+    final String PORT = "5000";
+
+
 
     boolean isManual = true;
     RelativeLayout layout_joystick;
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //connect wifi
-        thisWifiConnection = new Wifi();
+        thisWifiConnection = new Wifi(IP_ADDRESS);
 
         if (!thisWifiConnection.Connect()){
             switchToLoadScreen(findViewById(android.R.id.content));
@@ -106,13 +102,19 @@ public class MainActivity extends AppCompatActivity {
 
         mv = (MjpegView) findViewById(R.id.mv);
 
-        String hostname = "192.168.2.8";
-        String portnum = "5000";
-        new DoRead().execute( hostname, portnum);
+
+
+
+        new DoRead().execute( IP_ADDRESS, PORT);
         // my room
-      //  playStream("192.168.2.8:5000");
+      //  playStream(IP_ADDRESS + ":" + PORT);
 
     }
+
+ //   public native String callNative();
+  //  static {
+  //      System.loadLibrary("callnative");
+   // }
 
 
     @Override

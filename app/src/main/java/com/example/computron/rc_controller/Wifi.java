@@ -22,10 +22,10 @@ public class Wifi extends AsyncTask {
     private boolean isConnected = false;
     InetAddress piIPAddress;
 
-    public Wifi()
+    public Wifi(String ipAddr)
     {
         try {
-            piIPAddress = InetAddress.getByName("192.168.2.8");
+            piIPAddress = InetAddress.getByName(ipAddr);
         }
         catch (UnknownHostException e) {
             piIPAddress = null;
